@@ -1,5 +1,4 @@
-// The "main" object
-var main = (function () {
+var model = (function () {
     var self = {};
 
     self.createPerson = function () {

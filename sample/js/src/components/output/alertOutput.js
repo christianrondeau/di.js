@@ -1,5 +1,4 @@
-// The "Alert" Output
-var createAlertOutput = (function(){
+var createAlertOutput = function(){
     var self = {};
 
     self.send = function(value) {
@@ -7,4 +6,4 @@ var createAlertOutput = (function(){
     };
 
     return self;
-})();
+}
