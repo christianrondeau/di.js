@@ -6,29 +6,32 @@ var di = (function () {
 
         var mappings = {};
 
-        o.inject = function (name, target) {
-            var mapping = mappings[name];
+        o.inject = function (target) {
+            for (var propName in target) {
+                var propValue = target[propName];
+                var propType = typeof propValue;
 
-            if (typeof mapping === "undefined")
-                return target;
+                if (propType === "function")
+                    continue;
 
-            for (var mappedProperty in mapping) {
-                var mappedValue = mapping[mappedProperty];
-                var mappingType = typeof mappedValue;
+                if (propType === "undefined") {
+                    var mapValue = mappings[propName];
+                    var mapType = typeof mapValue;
 
-                if (mappingType === "function")
-                    target[mappedProperty] = mappedValue();
+                    if (mapType === "function")
+                        target[propName] = mapValue();
 
-                if (mappingType === "object" && mapping !== null)
-                    target[mappedProperty] = mappedValue;
+                    if (mapType === "object" && mapValue !== null)
+                        target[propName] = mapValue;
+                }
             }
 
             return target;
-        }
+        };
 
-        o.set = function (name, mapping) {
+        o.set = function(name, mapping) {
             mappings[name] = mapping;
-        }
+        };
 
         return o;
     };

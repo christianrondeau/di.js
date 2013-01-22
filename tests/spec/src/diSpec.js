@@ -7,29 +7,28 @@
 
     it("returns self when no mapping is found", function () {
         var target = {};
-        expect(container.inject("whatever", target)).toBe(target);
+        expect(container.inject(target)).toBe(target);
     });
 
     it("returns the desired object when an instance mapping is found", function () {
-        var target = {};
+        var target = {
+            property: undefined
+        };
         var injected = {};
-        container.set("mine", {
-            property: injected
-        });
+        container.set("property", injected);
 
-        expect(container.inject("mine", target).property).toBe(injected);
+        expect(container.inject(target).property).toBe(injected);
     });
 
     it("returns the desired object when a function mapping is found", function () {
-
-        var target = {};
+        var target = {
+            property: undefined
+        };
         var injected = {};
-        container.set("something", {
-            property: function () {
-                return injected;
-            }
+        container.set("property", function() {
+            return injected;
         });
 
-        expect(container.inject("something", target).property).toBe(injected);
+        expect(container.inject(target).property).toBe(injected);
     });
 });
