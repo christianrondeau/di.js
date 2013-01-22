@@ -11,7 +11,7 @@ This is only a very early alpha and is subject to major changes. Your suggestion
 Usage
 -----
 
-First, create a kernal
+First, create a kernel
 
     var kernel = di.create();
 
@@ -22,7 +22,7 @@ You can then define what instance to assign to a property
 You can also define a construction method instead
 
     kernel.set("property", function() {
-		return ...;
+		return creationFunction(params);
 	});
 
 That's it!
