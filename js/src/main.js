@@ -1,30 +1,43 @@
-var di = (function () {
+/// <reference path="di.js" />
+
+var main = (function () {
     var self = {};
 
-    self.create = function () {
-        var o = {};
+    var _kernel = di.create();
 
-        var mappings = {};
+    self.kernel = _kernel;
 
-        o.get = function (name) {
-            var mapping = mappings[name];
-            var mappingType = typeof mapping;
+    self.createPerson = function () {
+        var person = {};
 
-            if (mappingType === "function")
-                return mapping();
+        person.output = function () {
+            console.log("No output defined");
+        };
 
-            if (mappingType === "object" && mapping !== null)
-                return mapping;
+        person.say = function (bleh) {
+            alert(bleh);
+        };
 
-            return undefined;
-        }
-
-        o.set = function (name, instance) {
-            mappings[name] = instance;
-        }
-
-        return o;
+        return person;
     };
 
     return self;
 })();
+
+var createAlertOutput = (function(){
+    var self = {};
+
+    self.send = function(value) {
+        alert(value);
+    };
+
+    return self;
+})();
+
+main.kernel.set("person", {
+    output: createAlertOutput
+});
+
+var person = main.kernel.inject("person", main.createPerson());
+
+person.say("Hello World!");
