@@ -2,17 +2,20 @@
 /// <reference path="../model/model.js" />
 /// <reference path="../components/output/alertOutput.js" />
 /// <reference path="../components/output/simpleDomOutput.js" />
+/// <reference path="../components/log/consoleLog.js" />
 
-(function() {
+(function (sample) {
     // The Kernel
     var kernel = di.createKernel();
 
-    kernel.set("output", function() {
-        return createSimpleDomOutput(document.getElementById("output-div"));
+    kernel.set("log", sample.createConsoleLog());
+    
+    kernel.set("talking", function () {
+        return sample.createSimpleDomTalking(document.getElementById("output-div"));
     });
 
     // The Code
-    var person = kernel.inject(model.createPerson());
+    var person = kernel.inject(sample.model.createPerson("Bobby"));
 
     person.say("Hello World!");
-})();
+})(window.sample);

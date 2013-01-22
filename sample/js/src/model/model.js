@@ -1,17 +1,25 @@
-var model = (function () {
-    var self = {};
+(function () {
+    var model = (function() {
+        var self = {};
 
-    self.createPerson = function () {
-        var person = {};
+        self.createPerson = function(name) {
+            var person = {};
 
-        person.output = undefined;
+            // Dependencies
+            person.talking = undefined;
+            person.log = undefined;
 
-        person.say = function (bleh) {
-            person.output.send(bleh);
+            person.say = function(bleh) {
+                person.log.debug((name || "Unidentified person") + " is now saying '" + bleh + "'");
+                person.talking.send(bleh);
+            };
+
+            return person;
         };
 
-        return person;
-    };
+        return self;
+    })();
 
-    return self;
+    window.sample = window.sample || {};
+    window.sample.model = model;
 })();
