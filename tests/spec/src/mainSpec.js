@@ -1,14 +1,29 @@
-﻿describe("Test", function () {
+﻿describe("di", function () {
     var container, a, b;
 
     beforeEach(function () {
-        container = {};
+        container = di.create();
         a = {};
         b = {};
     });
 
-    it("first test", function () {
+    it("returns undefined when no mapping is found", function () {
+        expect(container.get("whatever")).toBeUndefined();
+    });
 
-        expect(true).toBe(true);
+    it("returns the desired object when an instance mapping is found", function () {
+        var o = {};
+        container.set("mine", o);
+
+        expect(container.get("mine")).toBe(o);
+    });
+
+    it("returns the desired object when a function mapping is found", function () {
+        var o = {};
+        container.set("something", function () {
+            return o;
+        });
+
+        expect(container.get("something")).toBe(o);
     });
 });
