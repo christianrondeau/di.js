@@ -5,7 +5,7 @@
 
 (function() {
     // The Kernel
-    var kernel = di.create();
+    var kernel = di.createKernel();
 
     kernel.set("output", function() {
         return createSimpleDomOutput(document.getElementById("output-div"));

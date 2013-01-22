@@ -13,7 +13,7 @@ Usage
 
 First, create a kernel
 
-    var kernel = di.create();
+    var kernel = di.createKernel();
 
 You can then define what instance to assign to a property
 

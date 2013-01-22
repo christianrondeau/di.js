@@ -1,7 +1,7 @@
 var di = (function () {
     var self = {};
 
-    self.create = function () {
+    self.createKernel = function () {
         var o = {};
 
         var mappings = {};

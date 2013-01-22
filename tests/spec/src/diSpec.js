@@ -1,34 +1,63 @@
 ﻿describe("di", function () {
-    var container;
+    it("is defined", function() {
+        expect(di).toBeDefined();
+    });
+
+    it("creates a kernel", function () {
+        expect(di.createKernel()).toBeDefined();
+    });
+});
+
+describe("kernel", function () {
+    var kernel;
 
     beforeEach(function () {
-        container = di.create();
+        kernel = di.createKernel();
     });
 
-    it("returns self when no mapping is found", function () {
-        var target = {};
-        expect(container.inject(target)).toBe(target);
-    });
+    describe("inject", function () {
 
-    it("returns the desired object when an instance mapping is found", function () {
-        var target = {
-            property: undefined
-        };
-        var injected = {};
-        container.set("property", injected);
+        it("returns the unmodified instance when no mapping is found", function () {
+            var target = {
+                property: undefined
+            };
 
-        expect(container.inject(target).property).toBe(injected);
-    });
-
-    it("returns the desired object when a function mapping is found", function () {
-        var target = {
-            property: undefined
-        };
-        var injected = {};
-        container.set("property", function() {
-            return injected;
+            expect(kernel.inject(target)).toBe(target);
+            expect(kernel.inject(target).property).toBeUndefined();
         });
 
-        expect(container.inject(target).property).toBe(injected);
+        it("injects the mapped properties when a mapping is found", function () {
+            var target = {
+                property: undefined
+            };
+            var injected = {};
+            kernel.set("property", injected);
+
+            expect(kernel.inject(target).property).toBe(injected);
+        });
+
+        it("does not inject the mapped properties when a mapping is found but a value is already assigned", function () {
+            var existing = {};
+            var target = {
+                property: existing
+            };
+            var injected = {};
+            kernel.set("property", injected);
+
+            expect(kernel.inject(target).property).toBe(existing);
+        });
+
+        it("injects the result of the mapped construction method when a mapping is found", function () {
+            var target = {
+                property: undefined
+            };
+            var injected = {};
+            kernel.set("property", function () {
+                return injected;
+            });
+
+            expect(kernel.inject(target).property).toBe(injected);
+        });
+
     });
 });
