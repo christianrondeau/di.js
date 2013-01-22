@@ -1,12 +1,13 @@
 var di = (function () {
     var self = {};
 
-    self.createKernel = function () {
-        var o = {};
+    /// @private createInjector
+    var createInjector = function () {
+        var injector = {};
 
-        var mappings = {};
+        var injected = {};
 
-        o.inject = function (target) {
+        injector.injectInto = function (target, mappings) {
             for (var propName in target) {
                 var propValue = target[propName];
                 var propType = typeof propValue;
@@ -18,18 +19,43 @@ var di = (function () {
                     var mapValue = mappings[propName];
                     var mapType = typeof mapValue;
 
-                    if (mapType === "function")
-                        target[propName] = mapValue();
+                    var toInject = injected[propName];
 
-                    if (mapType === "object" && mapValue !== null)
-                        target[propName] = mapValue;
+                    if (typeof toInject === "undefined") {
+                        if (mapType === "function")
+                            toInject = mapValue();
+                        else if (mapType === "object" && mapValue !== null)
+                            toInject = mapValue;
+
+                        injected[propName] = toInject;
+
+                        if (typeof toInject === "object" && toInject !== null)
+                            injector.injectInto(toInject, mappings);
+                    }
+
+                    target[propName] = toInject;
                 }
             }
+        };
+
+        return injector;
+    };
+
+    /// @public createKernel
+    self.createKernel = function () {
+        var o = {};
+
+        var mappings = {};
+
+        o.inject = function (target) {
+            var injector = createInjector();
+
+            injector.injectInto(target, mappings);
 
             return target;
         };
 
-        o.set = function(name, mapping) {
+        o.set = function (name, mapping) {
             mappings[name] = mapping;
         };
 

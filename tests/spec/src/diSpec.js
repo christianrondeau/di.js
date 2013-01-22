@@ -59,5 +59,26 @@ describe("kernel", function () {
             expect(kernel.inject(target).property).toBe(injected);
         });
 
+        it("injects recursive dependencies", function () {
+            var targetOuter = {
+                outer: undefined
+            };
+            var targetInner = {
+                inner: undefined
+            };
+            var targetFinal = {};
+            kernel.set("outer", function () {
+                return targetInner;
+            });
+            kernel.set("inner", function () {
+                return targetFinal;
+            });
+
+            var result = kernel.inject(targetOuter);
+
+            expect(result.outer).toBe(targetInner);
+            expect(result.outer.inner).toBe(targetFinal);
+        });
+
     });
 });
