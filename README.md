@@ -25,7 +25,12 @@ You can also define a construction method instead
 		return creationFunction(params);
 	});
 
-That's it!
+Recursivity and reuse
+---------------------
+
+When injecting an object, every injected object will also be injected with the mapped properties.
+
+If many objects share the same dependency and a construction method was provided, only one instance will be created for all injected objects in the hierarchy.
 
 Licence
 -------
