@@ -25,6 +25,10 @@ You can also define a construction method instead
 		return creationFunction(params);
 	});
 
+You can now inject recursive dependencies into an object
+
+    var target = kernel.inject(createMyObject());
+
 Recursivity and reuse
 ---------------------
 
