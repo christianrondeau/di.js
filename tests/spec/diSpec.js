@@ -115,9 +115,18 @@ describe("kernel", function () {
             expect(kernel.inject(target).property).toBe(injected);
         });
 
+        it("does not replace the placeholder when no mapping is found", function () {
+            var placeholder = { di: "auto" };
+            var target = {
+                property: placeholder
+            };
+
+            expect(kernel.inject(target).property).toBe(placeholder);
+        });
+
         it("injects the mapped properties with function parameters when a mapping with placeholder is found", function () {
             var target = {
-                property: { di: "auto", property: ["ctor value"] }
+                property: { di: "auto", ctor: ["ctor value"] }
             };
             kernel.set("property", function (value) {
                 return { test: value };

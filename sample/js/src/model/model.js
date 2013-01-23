@@ -10,8 +10,14 @@
             var person = {};
 
             // Dependencies
-            person.talking = undefined;
-            person.log = undefined;
+            person.talking = {
+                di: "auto",
+                send: function () { throw new Error("person.talking not set"); }
+            }; ;
+            person.log = {
+                di: "auto",
+                debug: function () { throw new Error("person.log not set"); }
+            };
 
             person.say = function (bleh) {
                 person.log.debug((name || "Unidentified person") + " is now saying '" + bleh + "'");
@@ -22,8 +28,8 @@
         };
 
         return self;
-    }());
+    } ());
 
     window.sample = window.sample || {};
     window.sample.model = model;
-}(window));
+} (window));

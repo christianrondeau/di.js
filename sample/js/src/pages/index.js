@@ -12,13 +12,13 @@
 
     // configuring the kernel
     kernel = di.createKernel();
-
+    
     kernel.set("log", sample.createConsoleLog());
 
     kernel.set("talking", function () {
         return sample.createSimpleDomTalking(document.getElementById("output-div"));
     });
-
+    
     // creating the instance
     person = kernel.inject(sample.model.createPerson("Bobby"));
 

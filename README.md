@@ -36,6 +36,19 @@ When injecting an object, every injected object will also be injected with the m
 
 If many objects share the same dependency and a construction method was provided, only one instance will be created for all injected objects in the hierarchy.
 
+Placeholders
+---------------------
+
+You can create a placeholder in objects to inject. Placeholders allow for getting better error messages, implementing a default behavior for non-injected objects and allow autocomplete in IDEs.
+
+var target = {
+	propertyToInject = {
+		di: "auto",
+		ctor: ["constructor", "parameters],
+		doSomething: function() { throw new Error("propertyToInject not set") };
+	};
+};
+
 Download
 --------
 

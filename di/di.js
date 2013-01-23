@@ -7,36 +7,42 @@
         var self = {};
 
         self.createInjector = function () {
-            var injector = {}, injected = {};
+            var injector = {}, cache = {};
 
             injector.injectInto = function (target, mappings) {
-                var propName, propValue, mapValue, mapType, toInject;
+                var propName, propValue, mapValue, mapType, toInject, cacheKey;
 
                 for (propName in target) {
                     if (target.hasOwnProperty(propName)) {
                         propValue = target[propName];
 
-                        if (propValue === undefined || propValue.di === "auto") {
+                        if (propValue === undefined || propValue === null || propValue.di === "auto") {
+                            propValue = propValue || {};
                             mapValue = mappings[propName];
                             mapType = typeof mapValue;
 
-                            toInject = injected[propName];
+                            cacheKey = propName + "::" + propValue.ctor;
+                            toInject = cache[cacheKey];
 
                             if (toInject === undefined) {
                                 if (mapType === "function") {
-                                    toInject = mapValue();
+                                    toInject = mapValue.apply(target, propValue.ctor);
                                 } else if (mapType === "object" && mapValue !== null) {
                                     toInject = mapValue;
                                 }
 
-                                injected[propName] = toInject;
-
                                 if (typeof toInject === "object" && toInject !== null) {
                                     injector.injectInto(toInject, mappings);
+                                } else {
+                                    toInject = null;
                                 }
+
+                                cache[cacheKey] = toInject;
                             }
 
-                            target[propName] = toInject;
+                            if (toInject !== null) {
+                                target[propName] = toInject;
+                            }
                         }
                     }
                 }
@@ -64,7 +70,7 @@
         };
 
         return self;
-    }());
+    } ());
 
     window.di = di;
-}(window));
+} (window));
