@@ -16,7 +16,7 @@
                     if (target.hasOwnProperty(propName)) {
                         propValue = target[propName];
 
-                        if (propValue === undefined) {
+                        if (propValue === undefined || propValue.di === "auto") {
                             mapValue = mappings[propName];
                             mapType = typeof mapValue;
 

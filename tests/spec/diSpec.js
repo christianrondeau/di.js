@@ -105,5 +105,25 @@ describe("kernel", function () {
             expect(result.child2.property).toBe(injected);
         });
 
+        it("injects the mapped properties when a mapping with placeholder is found", function () {
+            var target = {
+                property: { di: "auto" }
+            };
+            var injected = {};
+            kernel.set("property", injected);
+
+            expect(kernel.inject(target).property).toBe(injected);
+        });
+
+        it("injects the mapped properties with function parameters when a mapping with placeholder is found", function () {
+            var target = {
+                property: { di: "auto", property: ["ctor value"] }
+            };
+            kernel.set("property", function (value) {
+                return { test: value };
+            });
+
+            expect(kernel.inject(target).property.test).toBe("ctor value");
+        });
     });
 });
