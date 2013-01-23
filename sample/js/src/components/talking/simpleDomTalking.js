@@ -1,11 +1,15 @@
+/*global window*/
+
 (function (window) {
-    var createSimpleDomTalking = function(el) {
+    "use strict";
+
+    var createSimpleDomTalking = function (el) {
         var self = {};
 
         // Dependencies
         self.log = undefined;
 
-        self.send = function(value) {
+        self.send = function (value) {
             if (typeof el["innerText"] === "undefined")
                 throw new Error("Element does not have innerText property");
 
@@ -18,4 +22,4 @@
 
     window.sample = window.sample || {};
     window.sample.createSimpleDomTalking = createSimpleDomTalking;
-})(window);
+}(window));

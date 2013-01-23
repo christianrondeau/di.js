@@ -1,8 +1,12 @@
+/*global window, alert*/
+
 (function (window, alert) {
-    var createAlertTalking = function() {
+    "use strict";
+
+    var createAlertTalking = function () {
         var self = {};
 
-        self.send = function(value) {
+        self.send = function (value) {
             alert(value);
         };
 
@@ -11,4 +15,4 @@
 
     window.sample = window.sample || {};
     window.sample.createAlertTalking = createAlertTalking;
-})(window, alert);
+}(window, alert));

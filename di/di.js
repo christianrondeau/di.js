@@ -1,40 +1,43 @@
+/*global window*/
+
 (function (window) {
+    "use strict";
+
     var di = (function () {
         var self = {};
 
-        /// @private createInjector
-        var createInjector = function () {
-            var injector = {};
-
-            var injected = {};
+        self.createInjector = function () {
+            var injector = {}, injected = {};
 
             injector.injectInto = function (target, mappings) {
-                for (var propName in target) {
-                    var propValue = target[propName];
-                    var propType = typeof propValue;
+                var propName, propValue, mapValue, mapType, toInject;
 
-                    if (propType === "function")
-                        continue;
+                for (propName in target) {
+                    if (target.hasOwnProperty(propName)) {
+                        propValue = target[propName];
 
-                    if (propType === "undefined") {
-                        var mapValue = mappings[propName];
-                        var mapType = typeof mapValue;
+                        if (propValue === undefined) {
+                            mapValue = mappings[propName];
+                            mapType = typeof mapValue;
 
-                        var toInject = injected[propName];
+                            toInject = injected[propName];
 
-                        if (typeof toInject === "undefined") {
-                            if (mapType === "function")
-                                toInject = mapValue();
-                            else if (mapType === "object" && mapValue !== null)
-                                toInject = mapValue;
+                            if (toInject === undefined) {
+                                if (mapType === "function") {
+                                    toInject = mapValue();
+                                } else if (mapType === "object" && mapValue !== null) {
+                                    toInject = mapValue;
+                                }
 
-                            injected[propName] = toInject;
+                                injected[propName] = toInject;
 
-                            if (typeof toInject === "object" && toInject !== null)
-                                injector.injectInto(toInject, mappings);
+                                if (typeof toInject === "object" && toInject !== null) {
+                                    injector.injectInto(toInject, mappings);
+                                }
+                            }
+
+                            target[propName] = toInject;
                         }
-
-                        target[propName] = toInject;
                     }
                 }
             };
@@ -42,14 +45,11 @@
             return injector;
         };
 
-        /// @public createKernel
         self.createKernel = function () {
-            var o = {};
-
-            var mappings = {};
+            var o = {}, mappings = {};
 
             o.inject = function (target) {
-                var injector = createInjector();
+                var injector = self.createInjector();
 
                 injector.injectInto(target, mappings);
 
@@ -64,7 +64,7 @@
         };
 
         return self;
-    })();
+    }());
 
     window.di = di;
-})(window);
+}(window));

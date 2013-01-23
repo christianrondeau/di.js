@@ -1,4 +1,8 @@
+/*global window, console*/
+
 (function (window, console) {
+    "use strict";
+
     var createConsoleLog = function () {
         var self = {};
 
@@ -15,4 +19,4 @@
 
     window.sample = window.sample || {};
     window.sample.createConsoleLog = createConsoleLog;
-})(window, console);
+}(window, console));
