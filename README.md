@@ -19,15 +19,23 @@ You can then define what instance to assign to a property
 
     kernel.set("property", instance);
 
-You can also define a construction method instead
+You can also define a construction method instead of an instance
 
     kernel.set("property", function() {
-		return creationFunction(params);
+		return ...;
 	});
 
-You can now inject recursive dependencies into an object
+You can now inject dependencies into an object and its recursive dependencies
 
-    var instance = kernel.inject(createMyInstance());
+	var o = {
+		property: undefined
+	};
+
+    kernel.inject(o);
+
+Keep in mind that kernel.inject returns the instance, so you can create your objects in a single line
+
+	var o = kernel.inject(createMyObject());
 
 Recursivity and reuse
 ---------------------
@@ -39,15 +47,38 @@ If many objects share the same dependency and a construction method was provided
 Placeholders
 ---------------------
 
-You can create a placeholder in objects to inject. Placeholders allow for getting better error messages, implementing a default behavior for non-injected objects and allow autocomplete in IDEs.
+You can create a placeholder in objects to inject.
 
-var target = {
-	propertyToInject = {
-		di: "auto",
-		ctor: ["constructor", "parameters],
-		doSomething: function() { throw new Error("propertyToInject not set") };
+Placeholders allow for getting better error messages and allow autocomplete in IDEs.
+
+	var target = {
+		property = {
+			di: "auto",
+			doSomething: function() { throw new Error("propertyToInject not set") };
+		};
 	};
-};
+
+	kernel.inject(target);
+
+You could also use placeholders for implementing a default behavior if nothing is injected in the property.
+
+Constructor parameters
+---------------------
+
+You can use placeholders to provide parameters to the injected construction function.
+
+	kernel.set("property", function(param1, param2) {
+		return ...;
+	});
+
+	var target = {
+		property = {
+			di: "auto",
+			ctor: ["param1", "param2"]
+		};
+	};
+
+	kernel.inject(target);
 
 Download
 --------
