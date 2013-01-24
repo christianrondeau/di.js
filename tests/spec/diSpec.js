@@ -63,6 +63,47 @@ describe("kernel", function () {
                 expect(kernel.inject({ property: undefined }).property).toEqual(injected);
             });
 
+            it("sets the properties when a mapping with placeholder is found", function () {
+                var target = {
+                    property: { di: "auto" }
+                };
+                var injected = {};
+                kernel.map("property").to(injected);
+
+                expect(kernel.inject(target).property).toEqual(injected);
+            });
+
+            it("keeps the placeholder when no mapping is found", function () {
+                var placeholder = { di: "auto" };
+                var target = {
+                    property: placeholder
+                };
+
+                expect(kernel.inject(target).property).toEqual(placeholder);
+            });
+
+            it("sets the properties using the function and ctor parameters when a mapping with placeholder is found", function () {
+                var target = {
+                    property: { di: "auto", ctor: ["ctor value"] }
+                };
+                kernel.map("property").to(function (value) {
+                    return { test: value };
+                });
+
+                expect(kernel.inject(target).property.test).toEqual("ctor value");
+            });
+
+            it("sets the properties using the function and the placeholder parameters when a mapping with placeholder is found", function () {
+                var target = {
+                    property: { di: "auto", ctor: ["ctor value"] }
+                };
+                kernel.map("property").to(function (value) {
+                    return { test: value };
+                });
+
+                expect(kernel.inject(target).property.test).toEqual("ctor value");
+            });
+
             it("sets properties recursively", function () {
                 var targetOuter = { outer: undefined };
                 var targetInner = { inner: undefined };
@@ -105,34 +146,35 @@ describe("kernel", function () {
                 expect(result.child2.property).toEqual(injected);
             });
 
-            it("sets the properties when a mapping with placeholder is found", function () {
-                var target = {
-                    property: { di: "auto" }
+            it("sets a different instance to many properties in one injection when the construction function is provided with an object", function () {
+                var times = 0;
+                var parent = {
+                    child1: undefined,
+                    child2: undefined
                 };
                 var injected = {};
-                kernel.map("property").to(injected);
-
-                expect(kernel.inject(target).property).toEqual(injected);
-            });
-
-            it("keeps the placeholder when no mapping is found", function () {
-                var placeholder = { di: "auto" };
-                var target = {
-                    property: placeholder
-                };
-
-                expect(kernel.inject(target).property).toEqual(placeholder);
-            });
-
-            it("sets the properties using the function and the placeholder parameters when a mapping with placeholder is found", function () {
-                var target = {
-                    property: { di: "auto", ctor: ["ctor value"] }
-                };
-                kernel.map("property").to(function (value) {
-                    return { test: value };
+                kernel.map("child1").to({
+                    property: {
+                        di: "auto",
+                        ctor: {}
+                    }
+                });
+                kernel.map("child2").to({
+                    property: {
+                        di: "auto",
+                        ctor: {}
+                    }
+                });
+                kernel.map("property").to(function (o) {
+                    times++;
+                    return injected;
                 });
 
-                expect(kernel.inject(target).property.test).toEqual("ctor value");
+                var result = kernel.inject(parent);
+
+                expect(times).toEqual(1);
+                expect(result.child1.property).toEqual(injected);
+                expect(result.child2.property).toEqual(injected);
             });
         });
     });

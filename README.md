@@ -54,6 +54,8 @@ When injecting an object, every injected object will also be injected with the m
 
 If many objects share the same dependency and a construction method was provided, only one instance will be created for all injected objects in the hierarchy.
 
+The parameter values are used to differenciate calls to the same construction methods, but if objects are provided, the construction method will be called for every injection
+
 Placeholders
 ---------------------
 
