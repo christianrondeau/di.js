@@ -66,6 +66,10 @@
                 mappings[name] = mapping;
             };
 
+            o.get = function (name) {
+                return mappings[name];
+            };
+
             return o;
         };
 
