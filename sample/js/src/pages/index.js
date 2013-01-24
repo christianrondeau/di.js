@@ -13,9 +13,9 @@
     // configuring the kernel
     kernel = di.createKernel();
     
-    kernel.set("log", sample.createConsoleLog());
+    kernel.map("log").to(sample.createConsoleLog());
 
-    kernel.set("talking", function () {
+    kernel.map("talking").to(function () {
         return sample.createSimpleDomTalking(document.getElementById("output-div"));
     });
     

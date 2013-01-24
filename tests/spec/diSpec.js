@@ -18,7 +18,7 @@ describe("kernel", function () {
     describe("set", function () {
         it("registers the mapping of a property name and an object", function () {
             var o = {};
-            kernel.set("property", o);
+            kernel.map("property").to(o);
 
             expect(kernel.get("property")).toEqual(o);
         });
@@ -41,7 +41,7 @@ describe("kernel", function () {
             });
 
             it("does not inject the mapped properties when a mapping is found but a value is already assigned", function () {
-                kernel.set("property", {});
+                kernel.map("property").to({});
                 var existing = {};
 
                 expect(kernel.inject({ property: existing }).property).toEqual(existing);
@@ -49,14 +49,14 @@ describe("kernel", function () {
 
             it("sets the properties when a mapping is found", function () {
                 var injected = {};
-                kernel.set("property", injected);
+                kernel.map("property").to(injected);
 
                 expect(kernel.inject({ property: undefined }).property).toEqual(injected);
             });
 
             it("sets the properties using construction method when a mapping is found", function () {
                 var injected = {};
-                kernel.set("property", function () {
+                kernel.map("property").to(function () {
                     return injected;
                 });
 
@@ -67,10 +67,10 @@ describe("kernel", function () {
                 var targetOuter = { outer: undefined };
                 var targetInner = { inner: undefined };
                 var targetFinal = {};
-                kernel.set("outer", function () {
+                kernel.map("outer").to(function () {
                     return targetInner;
                 });
-                kernel.set("inner", function () {
+                kernel.map("inner").to(function () {
                     return targetFinal;
                 });
 
@@ -87,13 +87,13 @@ describe("kernel", function () {
                     child2: undefined
                 };
                 var injected = {};
-                kernel.set("child1", {
+                kernel.map("child1").to({
                     property: undefined
                 });
-                kernel.set("child2", {
+                kernel.map("child2").to({
                     property: undefined
                 });
-                kernel.set("property", function () {
+                kernel.map("property").to(function () {
                     times++;
                     return injected;
                 });
@@ -110,7 +110,7 @@ describe("kernel", function () {
                     property: { di: "auto" }
                 };
                 var injected = {};
-                kernel.set("property", injected);
+                kernel.map("property").to(injected);
 
                 expect(kernel.inject(target).property).toEqual(injected);
             });
@@ -128,7 +128,7 @@ describe("kernel", function () {
                 var target = {
                     property: { di: "auto", ctor: ["ctor value"] }
                 };
-                kernel.set("property", function (value) {
+                kernel.map("property").to(function (value) {
                     return { test: value };
                 });
 

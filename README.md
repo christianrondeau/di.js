@@ -20,13 +20,13 @@ First, create a kernel
 You can then define what instance to assign to a property
 
 ```javascript
-    kernel.set("property", instance);
+    kernel.map("property")to(instance);
 ```
 
 You can also define a construction method instead of an instance
 
 ```javascript
-    kernel.set("property", function() {
+    kernel.map("property").to(function() {
 		return ...;
 	});
 ```
@@ -59,7 +59,7 @@ Placeholders
 
 You can create a placeholder in objects to inject.
 
-Placeholders allow for getting better error messages and allow autocomplete in IDEs.
+Placeholders allow for getting better error messages and allow autocomplete in IDEs. They will be replaced when the injection is complete.
 
 ```javascript
 	var target = {
@@ -80,7 +80,7 @@ Constructor parameters
 You can use placeholders to provide parameters to the injected construction function.
 
 ```javascript
-	kernel.set("property", function(param1, param2) {
+	kernel.map("property".to(function(param1, param2) {
 		return ...;
 	});
 
