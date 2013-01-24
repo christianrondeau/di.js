@@ -13,29 +13,39 @@ Usage
 
 First, create a kernel
 
+```javascript
     var kernel = di.createKernel();
+```
 
 You can then define what instance to assign to a property
 
+```javascript
     kernel.set("property", instance);
+```
 
 You can also define a construction method instead of an instance
 
+```javascript
     kernel.set("property", function() {
 		return ...;
 	});
+```
 
 You can now inject dependencies into an object and its recursive dependencies
 
+```javascript
 	var o = {
 		property: undefined
 	};
 
     kernel.inject(o);
+```
 
-Keep in mind that kernel.inject returns the instance, so you can create your objects in a single line
+Keep in mind that `kernel.inject` returns the instance, so you can create your objects in a single line
 
+```javascript
 	var o = kernel.inject(createMyObject());
+```
 
 Recursivity and reuse
 ---------------------
@@ -51,6 +61,7 @@ You can create a placeholder in objects to inject.
 
 Placeholders allow for getting better error messages and allow autocomplete in IDEs.
 
+```javascript
 	var target = {
 		property = {
 			di: "auto",
@@ -59,6 +70,7 @@ Placeholders allow for getting better error messages and allow autocomplete in I
 	};
 
 	kernel.inject(target);
+```
 
 You could also use placeholders for implementing a default behavior if nothing is injected in the property.
 
@@ -67,6 +79,7 @@ Constructor parameters
 
 You can use placeholders to provide parameters to the injected construction function.
 
+```javascript
 	kernel.set("property", function(param1, param2) {
 		return ...;
 	});
@@ -79,6 +92,7 @@ You can use placeholders to provide parameters to the injected construction func
 	};
 
 	kernel.inject(target);
+```
 
 Download
 --------
