@@ -1,23 +1,5 @@
 ﻿describe("di warriors example", function () {
 
-    // ********************************************* logger
-
-    var loggers = {
-        createMemoryLogger: function() {
-            var self = {}, text = "";
-
-            self.write = function(line) {
-                text += line + "\n";
-            };
-
-            self.readAll = function() {
-                return text.substring(0, text.length - 1);
-            };
-
-            return self;
-        }
-    };
-
     // ********************************************* warriors
 
     var warriors = {
@@ -118,6 +100,55 @@
         }
     };
 
+    // ********************************************* logger
+
+    var loggers = {
+        createMemoryLogger: function () {
+            var self = {}, text = "";
+
+            self.write = function (line) {
+                text += line + "\n";
+            };
+
+            self.readAll = function () {
+                return text.substring(0, text.length - 1);
+            };
+
+            return self;
+        },
+
+        createJasmineLogger: function () {
+            var self = {};
+
+            self.write = function (line) {
+                jasmine.log(line);
+            };
+
+            return self;
+        },
+
+        createMultiLogger: function (list) {
+            var self = {};
+
+            self.write = function (line) {
+                for (var i = 0; i < list.length; i++) {
+                    list[i].write(line);
+                }
+            };
+
+            self.readAll = function () {
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i].readAll)
+                        return list[i].readAll();
+                }
+
+                return undefined;
+            };
+
+            return self;
+        }
+    };
+
     // ********************************************* setup
 
     var kernel, logger, fight;
@@ -132,7 +163,11 @@
     beforeEach(function () {
         kernel = di.createKernel();
 
-        logger = loggers.createMemoryLogger();
+        logger = loggers.createMultiLogger([
+            loggers.createMemoryLogger(),
+            loggers.createJasmineLogger()
+        ]);
+        
         kernel.map("logger").to(logger);
     });
 
