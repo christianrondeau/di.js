@@ -47,8 +47,9 @@
         injector.injectIntoTarget = function (target) {
             var propName;
 
-            if (!target)
+            if (!target) {
                 return;
+            }
 
             for (propName in target) {
                 if (target.hasOwnProperty(propName)) {
@@ -75,14 +76,14 @@
         };
 
         injector.injectIntoProperty = function (target, prop) {
-            var placeholder, dependency, params;
+            var placeholder, dependency, params, entry;
 
             placeholder = target[prop];
 
             if (injector.canPlaceholderBeInjected(placeholder)) {
 
                 params = placeholder ? placeholder.ctor : undefined;
-                var entry = cache.acquire(prop, params);
+                entry = cache.acquire(prop, params);
 
                 if (!entry.exists()) {
                     dependency = injector.getOrCreateDependency(target, mappings[prop], params);
@@ -90,8 +91,9 @@
                     entry.setValue(dependency);
                 }
 
-                if (entry.hasValue())
+                if (entry.hasValue()) {
                     target[prop] = entry.getValue();
+                }
             }
         };
 
@@ -104,19 +106,13 @@
         var kernel = {}, mappings = {};
 
         kernel.inject = function (target) {
-            var injector = di.createInjector(mappings);
-
-            injector.injectIntoTarget(target);
+            di.createInjector(mappings).injectIntoTarget(target);
 
             return target;
         };
 
         kernel.create = function (name, params) {
-            var injector = di.createInjector(mappings);
-
-            var result = injector.getOrCreateDependency(this, mappings[name], params);
-
-            return result;
+            return di.createInjector(mappings).getOrCreateDependency(this, mappings[name], params);
         };
 
         kernel.map = function (name) {
@@ -136,4 +132,4 @@
 
     // ********************************************** Registering
     window.di = di;
-} (window));
+}(window));
