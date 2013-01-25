@@ -92,8 +92,8 @@ With placeholders you can throw custom error messages and use autocomplete in ID
 
 You could also use placeholders for implementing a default behavior if nothing was injected.
 
-Constructor parameters
----------------------
+Construction function parameters
+--------------------------------
 
 You can use placeholders to provide parameters to the injected construction function.
 
@@ -105,7 +105,7 @@ You can use placeholders to provide parameters to the injected construction func
 	var warrior = {
 		weapon = {
 			inject: "placeholder",
-			ctor: ["Fire"]
+			params: ["Magic Ice"]
 		};
 	};
 

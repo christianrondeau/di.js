@@ -98,7 +98,7 @@
 
             if (injector.canPlaceholderBeInjected(placeholder)) {
 
-                params = placeholder ? placeholder.ctor : undefined;
+                params = placeholder ? placeholder.params : undefined;
                 entry = cache.acquire(prop, params);
 
                 if (!entry.exists()) {

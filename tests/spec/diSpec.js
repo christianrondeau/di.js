@@ -108,16 +108,16 @@ describe("kernel", function () {
 
             it("sets the properties using the function and ctor parameters when a mapping with placeholder is found", function () {
                 var target = {
-                    property: { inject: "placeholder", ctor: ["ctor value"] }
+                    property: { inject: "placeholder", params: ["foo"] }
                 };
                 kernel.map("property").to(function (value) {
                     return { test: value };
                 });
 
-                expect(kernel.inject(target).property.test).toEqual("ctor value");
+                expect(kernel.inject(target).property.test).toEqual("foo");
             });
 
-            it("when", function () {
+            it("injects when the 'when' condition returns a truthy value", function () {
                 var injected = {};
                 var o = {
                     property: { inject: "placeholder", someValue: 1 }
@@ -127,36 +127,36 @@ describe("kernel", function () {
                 expect(kernel.inject(o).property).toEqual(injected);
             });
 
-            it("when not", function () {
+            it("does not inject when the 'when' property returns a falsy value", function () {
                 var injected = {};
                 var o = {
                     property: { inject: "placeholder", someValue: 1 }
                 };
                 kernel.map("property").to(injected).when(function (target, placeholder) { return placeholder.someValue !== 1; });
 
-                expect(kernel.inject(o).property).toEqual(injected);
+                expect(kernel.inject(o).property.inject).toEqual("placeholder");
             });
 
             it("sets the properties using the function and a single ctor parameter when a mapping with placeholder is found", function () {
                 var target = {
-                    property: { inject: "placeholder", ctor: "ctor value" }
+                    property: { inject: "placeholder", params: "test" }
                 };
                 kernel.map("property").to(function (value) {
                     return { test: value };
                 });
 
-                expect(kernel.inject(target).property.test).toEqual("ctor value");
+                expect(kernel.inject(target).property.test).toEqual("test");
             });
 
             it("sets the properties using the function and the placeholder parameters when a mapping with placeholder is found", function () {
                 var target = {
-                    property: { inject: "placeholder", ctor: ["ctor value"] }
+                    property: { inject: "placeholder", params: ["value"] }
                 };
                 kernel.map("property").to(function (value) {
                     return { test: value };
                 });
 
-                expect(kernel.inject(target).property.test).toEqual("ctor value");
+                expect(kernel.inject(target).property.test).toEqual("value");
             });
 
             it("sets properties recursively", function () {
@@ -211,13 +211,13 @@ describe("kernel", function () {
                 kernel.map("child1").to({
                     property: {
                         inject: "placeholder",
-                        ctor: {}
+                        params: {}
                     }
                 });
                 kernel.map("child2").to({
                     property: {
                         inject: "placeholder",
-                        ctor: {}
+                        params: {}
                     }
                 });
                 kernel.map("property").to(function (o) {
