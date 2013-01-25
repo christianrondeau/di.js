@@ -116,37 +116,6 @@
 
             return self;
         },
-
-        createJasmineLogger: function () {
-            var self = {};
-
-            self.write = function (line) {
-                jasmine.log(line);
-            };
-
-            return self;
-        },
-
-        createMultiLogger: function (list) {
-            var self = {};
-
-            self.write = function (line) {
-                for (var i = 0; i < list.length; i++) {
-                    list[i].write(line);
-                }
-            };
-
-            self.readAll = function () {
-                for (var i = 0; i < list.length; i++) {
-                    if (list[i].readAll)
-                        return list[i].readAll();
-                }
-
-                return undefined;
-            };
-
-            return self;
-        }
     };
 
     // ********************************************* setup
@@ -163,10 +132,7 @@
     beforeEach(function () {
         kernel = di.createKernel();
 
-        logger = loggers.createMultiLogger([
-            loggers.createMemoryLogger(),
-            loggers.createJasmineLogger()
-        ]);
+        logger = loggers.createMemoryLogger();
 
         kernel.map("logger").to(logger);
     });
