@@ -58,20 +58,20 @@
             }
         };
 
-        injector.getOrCreateDependency = function (target, mapping, params) {
-            var targetType, i;
-            
-            for(i = 0; i < mapping.targets; i++) {
-                var targetMapping = mapping[i];
+        injector.getOrCreateDependency = function (target, mapping, params, placeholder) {
+            var targetValue, targetType, i, dependency;
 
-                if(!targetMapping.condition || targetMapping.condition(targetMapping.target, placeholder))
-                {
-                    targetType = typeof targetMapping.target, dependency;
+            for (i = 0; i < mapping.targets.length; i++) {
+                var targetMapping = mapping.targets[i];
+
+                if (!targetMapping.condition || targetMapping.condition(targetMapping.target, placeholder)) {
+                    targetValue = targetMapping.target;
+                    targetType = typeof targetValue;
 
                     if (targetType === "function") {
-                        dependency = targetMapping.target.apply(target, Array.isArray(params) ? params : [params]);
-                    } else if (targetType === "object" && source !== null) {
-                        dependency = targetMapping.target;
+                        dependency = targetValue.apply(target, Array.isArray(params) ? params : [params]);
+                    } else if (targetType === "object" && targetValue !== null) {
+                        dependency = targetValue;
                     }
 
                     if (typeof dependency === "object" && dependency !== null) {
@@ -87,7 +87,12 @@
         };
 
         injector.injectIntoProperty = function (target, prop) {
-            var placeholder, dependency, params, entry;
+            var mapping, placeholder, dependency, params, entry;
+
+            mapping = mappings[prop];
+
+            if (!mapping)
+                return;
 
             placeholder = target[prop];
 
@@ -97,7 +102,7 @@
                 entry = cache.acquire(prop, params);
 
                 if (!entry.exists()) {
-                    dependency = injector.getOrCreateDependency(target, mappings[prop], params);
+                    dependency = injector.getOrCreateDependency(target, mapping, params, placeholder);
 
                     entry.setValue(dependency);
                 }
@@ -123,7 +128,13 @@
         };
 
         kernel.create = function (name, params) {
-            return di.createInjector(mappings).getOrCreateDependency(this, mappings[name], params);
+            var mapping = mappings[name];
+
+            if (mapping) {
+                return di.createInjector(mappings).getOrCreateDependency(this, mapping, params);
+            } else {
+                return undefined;
+            }
         };
 
         kernel.map = function (name) {
@@ -132,34 +143,35 @@
                     var mapping = kernel.createMapping(name);
                     mappings[name] = mapping;
                     var targetMapping = mapping.addTarget(target);
+
                     return {
                         when: function (condition) {
                             targetMapping.condition = condition;
                         }
                     };
-                };
+                }
             };
         };
 
-        kernel.get = function (name) {
+        kernel.getMapping = function (name) {
             return mappings[name];
         };
 
-        kernel.createMapping(name) {
+        kernel.createMapping = function (name) {
             var mapping = {};
 
             mapping.name = name;
 
             mapping.targets = [];
 
-            mapping.addTarget(target) {
-                var targetMapping = {target: target};
-                targets.push(targetMapping);
+            mapping.addTarget = function (target) {
+                var targetMapping = { target: target };
+                mapping.targets.push(targetMapping);
                 return targetMapping;
-            }
+            };
 
             return mapping;
-        }
+        };
 
         return kernel;
     };

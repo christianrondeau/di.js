@@ -15,19 +15,19 @@ describe("kernel", function () {
         kernel = di.createKernel();
     });
 
-    describe("set", function () {
-        it("registers the mapping of a property name and an object", function () {
+    describe("map", function () {
+        it("registers the mapping of a property name to an object", function () {
             var o = {};
             kernel.map("property").to(o);
 
-            expect(kernel.get("property")).toEqual(o);
+            expect(kernel.getMapping("property").name).toBe("property");
         });
     });
 
     describe("create", function () {
 
         it("returns undefined when no mapping is found", function () {
-            expect(kernel.create("something")).toBeNull();
+            expect(kernel.create("something")).toBeUndefined();
         });
 
         it("returns the correct instance when a mapping is found", function () {
@@ -120,11 +120,21 @@ describe("kernel", function () {
             it("when", function () {
                 var injected = {};
                 var o = {
-                    property: { inject: "placeholder", ctor: ["ctor value"], value: 1 }
+                    property: { inject: "placeholder", someValue: 1 }
                 };
-                kernel.map("property").to(injected).when(function(target, placeholder) { return placeholder.value === 1 });
+                kernel.map("property").to(injected).when(function (target, placeholder) { return placeholder.someValue === 1; });
 
-                expect(kernel.inject(o).property.test).toEqual("ctor value");
+                expect(kernel.inject(o).property).toEqual(injected);
+            });
+
+            it("when not", function () {
+                var injected = {};
+                var o = {
+                    property: { inject: "placeholder", someValue: 1 }
+                };
+                kernel.map("property").to(injected).when(function (target, placeholder) { return placeholder.someValue !== 1; });
+
+                expect(kernel.inject(o).property).toEqual(injected);
             });
 
             it("sets the properties using the function and a single ctor parameter when a mapping with placeholder is found", function () {
