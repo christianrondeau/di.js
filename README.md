@@ -72,14 +72,12 @@ You can create a placeholder in objects to inject.
 Placeholders allow for getting better error messages and allow autocomplete in IDEs. They will be replaced when the injection is complete.
 
 ```javascript
-	var target = {
-		property = {
-			di: "auto",
-			doSomething: function() { throw new Error("propertyToInject not set") };
+	var warrior = {
+		weapon = {
+			inject: "placeholder",
+			hit: function() { throw new Error("weapon not set") };
 		};
 	};
-
-	kernel.inject(target);
 ```
 
 You could also use placeholders for implementing a default behavior if nothing is injected in the property.
@@ -96,7 +94,7 @@ You can use placeholders to provide parameters to the injected construction func
 
 	var target = {
 		property = {
-			di: "auto",
+			inject: "placeholder",
 			ctor: ["param1", "param2"]
 		};
 	};

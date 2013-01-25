@@ -41,7 +41,7 @@
         var injector = {}, cache = di.createCache();
 
         injector.canPlaceholderBeInjected = function (placeholder) {
-            return placeholder === undefined || placeholder === null || typeof placeholder.di === "string";
+            return placeholder === undefined || placeholder === null || typeof placeholder.inject === "string";
         };
 
         injector.injectIntoTarget = function (target) {

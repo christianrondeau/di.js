@@ -11,8 +11,8 @@
             self.health = health || 100;
 
             self.logger = {
-                di: "auto",
-                write: function () { throw new Error("logger not injected"); }
+                inject: "placeholder",
+                write: function() { throw new Error("logger not injected"); }
             };
 
             self.weapon = undefined;
@@ -46,7 +46,7 @@
             self.name = name;
 
             self.logger = {
-                di: "auto",
+                inject: "placeholder",
                 write: function () { throw new Error("logger not injected"); }
             };
 
@@ -71,7 +71,7 @@
             var self = {};
 
             self.logger = {
-                di: "auto",
+                inject: "placeholder",
                 write: function () { throw new Error("logger not injected"); }
             };
 
@@ -87,7 +87,7 @@
             var self = {};
 
             self.logger = {
-                di: "auto",
+                inject: "placeholder",
                 write: function () { throw new Error("logger not injected"); }
             };
 
@@ -167,7 +167,7 @@
             loggers.createMemoryLogger(),
             loggers.createJasmineLogger()
         ]);
-        
+
         kernel.map("logger").to(logger);
     });
 

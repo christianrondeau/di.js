@@ -89,7 +89,7 @@ describe("kernel", function () {
 
             it("sets the properties when a mapping with placeholder is found", function () {
                 var target = {
-                    property: { di: "auto" }
+                    property: { inject: "placeholder" }
                 };
                 var injected = {};
                 kernel.map("property").to(injected);
@@ -98,7 +98,7 @@ describe("kernel", function () {
             });
 
             it("keeps the placeholder when no mapping is found", function () {
-                var placeholder = { di: "auto" };
+                var placeholder = { inject: "placeholder" };
                 var target = {
                     property: placeholder
                 };
@@ -108,7 +108,7 @@ describe("kernel", function () {
 
             it("sets the properties using the function and ctor parameters when a mapping with placeholder is found", function () {
                 var target = {
-                    property: { di: "auto", ctor: ["ctor value"] }
+                    property: { inject: "placeholder", ctor: ["ctor value"] }
                 };
                 kernel.map("property").to(function (value) {
                     return { test: value };
@@ -119,7 +119,7 @@ describe("kernel", function () {
 
             it("sets the properties using the function and a single ctor parameter when a mapping with placeholder is found", function () {
                 var target = {
-                    property: { di: "auto", ctor: "ctor value" }
+                    property: { inject: "placeholder", ctor: "ctor value" }
                 };
                 kernel.map("property").to(function (value) {
                     return { test: value };
@@ -130,7 +130,7 @@ describe("kernel", function () {
 
             it("sets the properties using the function and the placeholder parameters when a mapping with placeholder is found", function () {
                 var target = {
-                    property: { di: "auto", ctor: ["ctor value"] }
+                    property: { inject: "placeholder", ctor: ["ctor value"] }
                 };
                 kernel.map("property").to(function (value) {
                     return { test: value };
@@ -190,13 +190,13 @@ describe("kernel", function () {
                 var injected = {};
                 kernel.map("child1").to({
                     property: {
-                        di: "auto",
+                        inject: "placeholder",
                         ctor: {}
                     }
                 });
                 kernel.map("child2").to({
                     property: {
-                        di: "auto",
+                        inject: "placeholder",
                         ctor: {}
                     }
                 });
