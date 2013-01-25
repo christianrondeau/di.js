@@ -117,12 +117,23 @@ describe("kernel", function () {
                 expect(kernel.inject(target).property.test).toEqual("foo");
             });
 
-            it("injects when the 'when' condition returns a truthy value", function () {
+            it("injects when the 'when' condition on the placeholder returns a truthy value", function () {
                 var injected = {};
                 var o = {
                     property: { inject: "placeholder", someValue: 1 }
                 };
-                kernel.map("property").to(injected).when(function (target, placeholder) { return placeholder.someValue === 1; });
+                kernel.map("property").to(injected).when(function (context) { return context.placeholder.someValue === 1; });
+
+                expect(kernel.inject(o).property).toEqual(injected);
+            });
+
+            it("injects when the 'when' condition on the target returns a truthy value", function () {
+                var injected = {};
+                var o = {
+                    property: { inject: "placeholder" },
+                    someValue: 1
+                };
+                kernel.map("property").to(injected).when(function (context) { return context.target.someValue === 1; });
 
                 expect(kernel.inject(o).property).toEqual(injected);
             });
@@ -132,7 +143,7 @@ describe("kernel", function () {
                 var o = {
                     property: { inject: "placeholder", someValue: 1 }
                 };
-                kernel.map("property").to(injected).when(function (target, placeholder) { return placeholder.someValue !== 1; });
+                kernel.map("property").to(injected).when(function (context) { return context.placeholder.someValue !== 1; });
 
                 expect(kernel.inject(o).property.inject).toEqual("placeholder");
             });

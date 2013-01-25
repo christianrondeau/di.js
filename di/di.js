@@ -59,13 +59,19 @@
         };
 
         injector.getOrCreateDependency = function (target, mapping, params, placeholder) {
-            var targetValue, targetType, i, dependency;
+            var targetValue, targetType, i, dependency, context;
 
             for (i = 0; i < mapping.targets.length; i++) {
                 var targetMapping = mapping.targets[i];
+                targetValue = targetMapping.target;
 
-                if (!targetMapping.condition || targetMapping.condition(targetMapping.target, placeholder)) {
-                    targetValue = targetMapping.target;
+                context = {
+                    target: target,
+                    placeholder: placeholder
+                };
+
+                if (!targetMapping.condition || targetMapping.condition(context)) {
+
                     targetType = typeof targetValue;
 
                     if (targetType === "function") {

@@ -43,6 +43,13 @@ You can also define a construction method instead of an instance
 	});
 ```
 
+You can provide conditional mappings using the `when` function; the `context` parameter contains a `placeholder` and the injection `target`
+
+```javascript
+    kernel.map("weapon").to(sword).when(function(context) { return context.target.strength >= 10 });
+	kernel.map("weapon").to(stick).when(function(context) { return context.target.strength < 10 });
+```
+
 You can inject dependencies directly into an object
 
 ```javascript

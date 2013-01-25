@@ -221,4 +221,14 @@
         expect(logger.readAll()).toEqual("I, Nitobi, attack Karasuma with my ninja skills!\nSword used on Karasuma!\nKarasuma died honorably today.");
     });
 
+    it("Nitobi the ninja tries to kill Karasuma the ninja with a sword but only Jimmy can hold the sword!", function () {
+        kernel.map("weapon").to(weapons.createSword).when(function(context){return context.target.name === "Jimmy"});
+        kernel.map("attacker").to(warriors.createNinja);
+        kernel.map("defender").to(warriors.createNinja);
+
+        fight("Nitobi", "Karasuma");
+
+        expect(logger.readAll()).toEqual("I, Nitobi, punch Karasuma with my ninja fists!\nKarasuma received a hit but is still standing!");
+    });
+
 });
