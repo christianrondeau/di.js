@@ -49,13 +49,13 @@ describe("kernel", function () {
     describe("inject", function () {
 
         describe("is chainable", function () {
-            
+
             it("returns the unmodified instance when no mapping is found", function () {
                 var target = {};
 
                 expect(kernel.inject(target)).toEqual(target);
             });
-            
+
         });
 
         describe("applies mappings to the target object", function () {
@@ -115,6 +115,16 @@ describe("kernel", function () {
                 });
 
                 expect(kernel.inject(target).property.test).toEqual("ctor value");
+            });
+
+            it("when", function () {
+                var injected = {};
+                var o = {
+                    property: { inject: "placeholder", ctor: ["ctor value"], value: 1 }
+                };
+                kernel.map("property").to(injected).when(function(target, placeholder) { return placeholder.value === 1 });
+
+                expect(kernel.inject(o).property.test).toEqual("ctor value");
             });
 
             it("sets the properties using the function and a single ctor parameter when a mapping with placeholder is found", function () {
@@ -215,5 +225,5 @@ describe("kernel", function () {
         });
 
     });
-    
+
 });

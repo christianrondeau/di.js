@@ -58,18 +58,29 @@
             }
         };
 
-        injector.getOrCreateDependency = function (target, source, params) {
-            var mapType = typeof source, dependency;
+        injector.getOrCreateDependency = function (target, mapping, params) {
+            var targetType, i;
+            
+            for(i = 0; i < mapping.targets; i++) {
+                var targetMapping = mapping[i];
 
-            if (mapType === "function") {
-                dependency = source.apply(target, Array.isArray(params) ? params : [params]);
-            } else if (mapType === "object" && source !== null) {
-                dependency = source;
-            }
+                if(!targetMapping.condition || targetMapping.condition(targetMapping.target, placeholder))
+                {
+                    targetType = typeof targetMapping.target, dependency;
 
-            if (typeof dependency === "object" && dependency !== null) {
-                injector.injectIntoTarget(dependency, mappings);
-                return dependency;
+                    if (targetType === "function") {
+                        dependency = targetMapping.target.apply(target, Array.isArray(params) ? params : [params]);
+                    } else if (targetType === "object" && source !== null) {
+                        dependency = targetMapping.target;
+                    }
+
+                    if (typeof dependency === "object" && dependency !== null) {
+                        injector.injectIntoTarget(dependency);
+                        return dependency;
+                    }
+
+                    return null;
+                }
             }
 
             return null;
@@ -118,8 +129,15 @@
         kernel.map = function (name) {
             return {
                 to: function (target) {
-                    mappings[name] = target;
-                }
+                    var mapping = kernel.createMapping(name);
+                    mappings[name] = mapping;
+                    var targetMapping = mapping.addTarget(target);
+                    return {
+                        when: function (condition) {
+                            targetMapping.condition = condition;
+                        }
+                    };
+                };
             };
         };
 
@@ -127,9 +145,25 @@
             return mappings[name];
         };
 
+        kernel.createMapping(name) {
+            var mapping = {};
+
+            mapping.name = name;
+
+            mapping.targets = [];
+
+            mapping.addTarget(target) {
+                var targetMapping = {target: target};
+                targets.push(targetMapping);
+                return targetMapping;
+            }
+
+            return mapping;
+        }
+
         return kernel;
     };
 
     // ********************************************** Registering
     window.di = di;
-}(window));
+} (window));
