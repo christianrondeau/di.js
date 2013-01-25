@@ -61,12 +61,17 @@
             var mapType = typeof source, dependency;
 
             if (mapType === "function") {
-                dependency = source.apply(target, params);
+                dependency = source.apply(target, Array.isArray(params) ? params : [params]);
             } else if (mapType === "object" && source !== null) {
                 dependency = source;
             }
 
-            return (typeof dependency === "object" && dependency !== null) ? dependency : null;
+            if (typeof dependency === "object" && dependency !== null) {
+                injector.injectIntoTarget(dependency, mappings);
+                return dependency;
+            }
+
+            return null;
         };
 
         injector.injectIntoProperty = function (target, prop) {
@@ -81,9 +86,6 @@
 
                 if (!entry.exists()) {
                     dependency = injector.getOrCreateDependency(target, mappings[prop], params);
-
-                    if (dependency !== null)
-                        injector.injectIntoTarget(dependency, mappings);
 
                     entry.setValue(dependency);
                 }
@@ -107,6 +109,14 @@
             injector.injectIntoTarget(target);
 
             return target;
+        };
+
+        kernel.create = function (name, params) {
+            var injector = di.createInjector(mappings);
+
+            var result = injector.getOrCreateDependency(this, mappings[name], params);
+
+            return result;
         };
 
         kernel.map = function (name) {

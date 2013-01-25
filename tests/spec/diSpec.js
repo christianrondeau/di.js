@@ -24,14 +24,38 @@ describe("kernel", function () {
         });
     });
 
+    describe("create", function () {
+
+        it("returns undefined when no mapping is found", function () {
+            expect(kernel.create("something")).toBeNull();
+        });
+
+        it("returns the correct instance when a mapping is found", function () {
+            var instance = {};
+            kernel.map("something").to(instance);
+
+            expect(kernel.create("something")).toEqual(instance);
+        });
+
+        it("provides the parameters to the construction methods when there are parameters", function () {
+            kernel.map("something").to(function (name) {
+                return { name: name };
+            });
+
+            expect(kernel.create("something", ["John"]).name).toEqual("John");
+        });
+    });
+
     describe("inject", function () {
 
         describe("is chainable", function () {
+            
             it("returns the unmodified instance when no mapping is found", function () {
                 var target = {};
 
                 expect(kernel.inject(target)).toEqual(target);
             });
+            
         });
 
         describe("applies mappings to the target object", function () {
@@ -85,6 +109,17 @@ describe("kernel", function () {
             it("sets the properties using the function and ctor parameters when a mapping with placeholder is found", function () {
                 var target = {
                     property: { di: "auto", ctor: ["ctor value"] }
+                };
+                kernel.map("property").to(function (value) {
+                    return { test: value };
+                });
+
+                expect(kernel.inject(target).property.test).toEqual("ctor value");
+            });
+
+            it("sets the properties using the function and a single ctor parameter when a mapping with placeholder is found", function () {
+                var target = {
+                    property: { di: "auto", ctor: "ctor value" }
                 };
                 kernel.map("property").to(function (value) {
                     return { test: value };
@@ -176,6 +211,9 @@ describe("kernel", function () {
                 expect(result.child1.property).toEqual(injected);
                 expect(result.child2.property).toEqual(injected);
             });
+
         });
+
     });
+    
 });

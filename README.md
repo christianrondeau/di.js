@@ -20,22 +20,22 @@ First, create a kernel
 You can then define what instance to assign to a property
 
 ```javascript
-    kernel.map("property")to(instance);
+    kernel.map("weapon").to(sword);
 ```
 
 You can also define a construction method instead of an instance
 
 ```javascript
-    kernel.map("property").to(function() {
-		return ...;
+    kernel.map("weapon").to(function() {
+		return createSword();
 	});
 ```
 
 You can now inject dependencies into an object and its recursive dependencies
 
 ```javascript
-	var o = {
-		property: undefined
+	var warrior = {
+		weapon: undefined
 	};
 
     kernel.inject(o);
@@ -44,7 +44,15 @@ You can now inject dependencies into an object and its recursive dependencies
 Keep in mind that `kernel.inject` returns the instance, so you can create your objects in a single line
 
 ```javascript
-	var o = kernel.inject(createMyObject());
+	var warrior = kernel.inject(createWarrior());
+```
+
+You can also directly create instance of a mapping by providing the name to `kernel.create`
+
+```javascript
+	kernel.map("warrior").to(createNinja);
+
+	var ninja = kernel.create("warrior");
 ```
 
 Recursivity and reuse
