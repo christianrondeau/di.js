@@ -8,18 +8,18 @@
     });
 });
 
-describe("cache", function () {
+describe("dict", function () {
 
     describe("acquire.exists", function () {
 
-        it("creates a cache entry the first time it is called", function () {
-            expect(di.createCache().acquire("key").exists()).toEqual(false);
+        it("creates an entry the first time it is called", function () {
+            expect(di.createDict().acquire("key").exists()).toEqual(false);
         });
 
-        it("gets the same cache entry second time it is called", function () {
-            var cache = di.createCache({ key: "test" });
+        it("gets the same entry the second time it is called", function () {
+            var dict = di.createDict({ key: "test" });
 
-            expect(cache.acquire("key").exists()).toEqual(true);
+            expect(dict.acquire("key").exists()).toEqual(true);
         });
 
     });
@@ -27,15 +27,15 @@ describe("cache", function () {
     describe("acquire.hasValue", function () {
 
         it("returns true when an object is found", function () {
-            expect(di.createCache({ key: {} }).acquire("key").hasValue()).toEqual(true);
+            expect(di.createDict({ key: {} }).acquire("key").hasValue()).toEqual(true);
         });
 
         it("returns false when the key is not found", function () {
-            expect(di.createCache().acquire("key").hasValue()).toEqual(false);
+            expect(di.createDict().acquire("key").hasValue()).toEqual(false);
         });
 
         it("returns false when null is found", function () {
-            expect(di.createCache({ key: null }).acquire("key").hasValue()).toEqual(false);
+            expect(di.createDict({ key: null }).acquire("key").hasValue()).toEqual(false);
         });
 
     });
@@ -43,19 +43,19 @@ describe("cache", function () {
     describe("acquire.getValue", function () {
 
         it("returns undefined when an object is not found", function () {
-            expect(di.createCache().acquire("key").getValue()).toBeUndefined();
+            expect(di.createDict().acquire("key").getValue()).toBeUndefined();
         });
 
-        it("returns the cached object when the key is found", function () {
-            expect(di.createCache({ key: "test" }).acquire("key").getValue()).toEqual("test");
+        it("returns the object when the key is found", function () {
+            expect(di.createDict({ key: "test" }).acquire("key").getValue()).toEqual("test");
         });
     });
 
     describe("acquire.setValue", function () {
 
         it("sets the value under the specified key", function () {
-            var values = {}, cache = di.createCache(values);
-            cache.acquire("key").setValue("value");
+            var values = {}, dict = di.createDict(values);
+            dict.acquire("key").setValue("value");
 
             expect(values.key).toEqual("value");
         });
@@ -65,26 +65,26 @@ describe("cache", function () {
     describe("acquire.getOrCreate", function () {
 
         it("returns a new object when an object is not found", function () {
-            expect(di.createCache().acquire("key").getOrCreate(function () { return "test"; })).toEqual("test");
+            expect(di.createDict().acquire("key").getOrCreate(function () { return "test"; })).toEqual("test");
         });
 
-        it("returns the cached object when the key is found", function () {
-            expect(di.createCache({key: "exists"}).acquire("key").getOrCreate(function () { return "test"; })).toEqual("exists");
+        it("returns the object when the key is found", function () {
+            expect(di.createDict({key: "exists"}).acquire("key").getOrCreate(function () { return "test"; })).toEqual("exists");
         });
     });
 
     describe("acquire.key", function () {
 
         it("is exactly the provided key", function () {
-            expect(di.createCache().acquire("key").getGey()).toEqual("key");
+            expect(di.createDict().acquire("key").getGey()).toEqual("key");
         });
 
         it("is the provided key plus the param", function () {
-            expect(di.createCache().acquire("key", "param1").getGey()).toEqual("key::param1");
+            expect(di.createDict().acquire("key", "param1").getGey()).toEqual("key::param1");
         });
 
         it("is the provided key plus the list of params", function () {
-            expect(di.createCache().acquire("key", ["param1", "param2"]).getGey()).toEqual("key::param1,param2");
+            expect(di.createDict().acquire("key", ["param1", "param2"]).getGey()).toEqual("key::param1,param2");
         });
 
     });

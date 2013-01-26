@@ -5,12 +5,12 @@
 
     var di = {};
 
-    // ********************************************** Cache
+    // ********************************************** Dict
 
-    di.createCache = function (init) {
-        var cache = {}, entries = init || {};
+    di.createDict = function (init) {
+        var dict = {}, entries = init || {};
 
-        cache.acquire = function (prop, params) {
+        dict.acquire = function (prop, params) {
             var key, value;
             key = prop + (params ? "::" + (params.join ? params.join(",") : params) : "");
             value = entries[key];
@@ -43,13 +43,13 @@
             };
         };
 
-        return cache;
+        return dict;
     };
 
     // ********************************************** Injector
 
     di.createInjector = function (mappings) {
-        var injector = {}, cache = di.createCache();
+        var injector = {}, cache = di.createDict();
 
         injector.canPlaceholderBeInjected = function (placeholder) {
             return placeholder === undefined || placeholder === null || typeof placeholder.inject === "string";
@@ -174,7 +174,7 @@
     // ********************************************** Container
 
     di.createContainer = function () {
-        var container = {}, mappings = di.createCache();
+        var container = {}, mappings = di.createDict();
 
         container.inject = function (target) {
             di.createInjector(mappings).injectIntoTarget(target);
