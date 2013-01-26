@@ -1,14 +1,24 @@
-﻿describe("di", function () {
+﻿// ********************************************** di
+
+describe("di", function () {
+
     it("is defined", function() {
         expect(di).toBeDefined();
     });
 
-    it("creates a container", function () {
-        expect(di.createContainer()).toBeDefined();
-    });
 });
 
+// ********************************************** dict
+
 describe("dict", function () {
+
+    describe("createDict", function () {
+
+        it("creates a dictionary", function () {
+            expect(di.createDict()).toBeDefined();
+        });
+
+    });
 
     describe("acquire.exists", function () {
 
@@ -49,6 +59,7 @@ describe("dict", function () {
         it("returns the object when the key is found", function () {
             expect(di.createDict({ key: "test" }).acquire("key").getValue()).toEqual("test");
         });
+
     });
 
     describe("acquire.setValue", function () {
@@ -71,6 +82,7 @@ describe("dict", function () {
         it("returns the object when the key is found", function () {
             expect(di.createDict({key: "exists"}).acquire("key").getOrCreate(function () { return "test"; })).toEqual("exists");
         });
+
     });
 
     describe("acquire.key", function () {
@@ -91,11 +103,35 @@ describe("dict", function () {
 
 });
 
+// ********************************************** mapping
+
+describe("mapping", function () {
+
+    describe("createMapping", function () {
+
+        it("creates a mapping", function () {
+            expect(di.createMapping()).toBeDefined();
+        });
+
+    });
+
+});
+
+// ********************************************** container
+
 describe("container", function () {
     var container;
 
     beforeEach(function () {
         container = di.createContainer();
+    });
+
+    describe("createContainer", function () {
+
+        it("creates an injection container", function () {
+            expect(container).toBeDefined();
+        });
+
     });
 
     describe("map", function () {
