@@ -62,6 +62,17 @@ describe("cache", function () {
 
     });
 
+    describe("acquire.getOrCreate", function () {
+
+        it("returns a new object when an object is not found", function () {
+            expect(di.createCache().acquire("key").getOrCreate(function () { return "test"; })).toEqual("test");
+        });
+
+        it("returns the cached object when the key is found", function () {
+            expect(di.createCache({key: "exists"}).acquire("key").getOrCreate(function () { return "test"; })).toEqual("exists");
+        });
+    });
+
     describe("acquire.key", function () {
 
         it("is exactly the provided key", function () {
@@ -73,7 +84,7 @@ describe("cache", function () {
         });
 
         it("is the provided key plus the list of params", function () {
-            expect(di.createCache().acquire("key",  ["param1", "param2"]).getGey()).toEqual("key::param1,param2");
+            expect(di.createCache().acquire("key", ["param1", "param2"]).getGey()).toEqual("key::param1,param2");
         });
 
     });

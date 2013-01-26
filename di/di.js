@@ -31,6 +31,14 @@
                 setValue: function (o) {
                     value = o;
                     entries[key] = value;
+                },
+                getOrCreate: function (createFunc) {
+                    var entry = entries[key];
+                    if (!entry) {
+                        entry = createFunc();
+                        entries[key] = entry;
+                    }
+                    return entry;
                 }
             };
         };
@@ -98,7 +106,7 @@
         injector.injectIntoProperty = function (target, prop) {
             var mapping, placeholder, dependency, params, entry;
 
-            mapping = mappings.get(prop);
+            mapping = mappings.acquire(prop).getValue();
 
             if (!mapping)
                 return;
@@ -125,27 +133,6 @@
         return injector;
     };
 
-    // ********************************************** Mapping Dictionary
-
-    di.createMappingDict = function () {
-        var mappingDict = {}, dict = [];
-
-        mappingDict.get = function (name) {
-            return dict[name];
-        };
-
-        mappingDict.getOrCreate = function (name) {
-            var o = dict[name];
-            if (o === undefined) {
-                o = di.createMapping(name);
-                dict[name] = o;
-            }
-            return o;
-        };
-
-        return mappingDict;
-    };
-
     // ********************************************** Mapping
 
     di.createMapping = function (name) {
@@ -170,7 +157,7 @@
         var map = {};
 
         map.to = function (target) {
-            var mapping = mappings.getOrCreate(name);
+            var mapping = mappings.acquire(name).getOrCreate(function () { return di.createMapping(name); });
 
             var targetMapping = mapping.addTarget(target);
 
@@ -187,7 +174,7 @@
     // ********************************************** Container
 
     di.createContainer = function () {
-        var container = {}, mappings = di.createMappingDict();
+        var container = {}, mappings = di.createCache();
 
         container.inject = function (target) {
             di.createInjector(mappings).injectIntoTarget(target);
@@ -196,7 +183,7 @@
         };
 
         container.create = function (name, params) {
-            var mapping = mappings.getOrCreate(name);
+            var mapping = mappings.acquire(name).getOrCreate(function () { return di.createMapping(name) });
 
             if (mapping) {
                 return di.createInjector(mappings).getOrCreateDependency(this, mapping, params);
@@ -210,7 +197,7 @@
         };
 
         container.getMapping = function (name) {
-            return mappings.get(name);
+            return mappings.acquire(name).getValue();
         };
 
         return container;
