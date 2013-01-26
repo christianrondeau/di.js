@@ -95,7 +95,7 @@
         injector.injectIntoProperty = function (target, prop) {
             var mapping, placeholder, dependency, params, entry;
 
-            mapping = mappings[prop];
+            mapping = mappings.get(prop);
 
             if (!mapping)
                 return;
@@ -168,7 +168,7 @@
 
         map.to = function (target) {
             var mapping = mappings.getOrCreate(name);
-            mappings[name] = mapping;
+
             var targetMapping = mapping.addTarget(target);
 
             return {
