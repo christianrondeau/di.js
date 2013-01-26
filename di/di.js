@@ -85,11 +85,11 @@
                         return dependency;
                     }
 
-                    return null;
+                    return undefined;
                 }
             }
 
-            return null;
+            return undefined;
         };
 
         injector.injectIntoProperty = function (target, prop) {
@@ -122,10 +122,69 @@
         return injector;
     };
 
+    // ********************************************** Mapping Dictionary
+
+    di.createMappingDict = function () {
+        var mappingDict = {}, dict = [];
+
+        mappingDict.get = function (name) {
+            return dict[name];
+        };
+
+        mappingDict.getOrCreate = function (name) {
+            var o = dict[name];
+            if (o === undefined) {
+                o = di.createMapping(name);
+                dict[name] = o;
+            }
+            return o;
+        };
+
+        return mappingDict;
+    };
+
+    // ********************************************** Mapping
+
+    di.createMapping = function (name) {
+        var mapping = {};
+
+        mapping.name = name;
+
+        mapping.targets = [];
+
+        mapping.addTarget = function (target) {
+            var targetMapping = { target: target };
+            mapping.targets.push(targetMapping);
+            return targetMapping;
+        };
+
+        return mapping;
+    };
+
+    // ********************************************** Map Chain
+
+    di.createMapChain = function (mappings, name) {
+        var map = {};
+
+        map.to = function (target) {
+            var mapping = mappings.getOrCreate(name);
+            mappings[name] = mapping;
+            var targetMapping = mapping.addTarget(target);
+
+            return {
+                when: function (condition) {
+                    targetMapping.condition = condition;
+                }
+            };
+        }
+
+        return map;
+    };
+
     // ********************************************** Kernel
 
     di.createKernel = function () {
-        var kernel = {}, mappings = {};
+        var kernel = {}, mappings = di.createMappingDict();
 
         kernel.inject = function (target) {
             di.createInjector(mappings).injectIntoTarget(target);
@@ -134,7 +193,7 @@
         };
 
         kernel.create = function (name, params) {
-            var mapping = mappings[name];
+            var mapping = mappings.getOrCreate(name);
 
             if (mapping) {
                 return di.createInjector(mappings).getOrCreateDependency(this, mapping, params);
@@ -144,39 +203,11 @@
         };
 
         kernel.map = function (name) {
-            return {
-                to: function (target) {
-                    var mapping = kernel.createMapping(name);
-                    mappings[name] = mapping;
-                    var targetMapping = mapping.addTarget(target);
-
-                    return {
-                        when: function (condition) {
-                            targetMapping.condition = condition;
-                        }
-                    };
-                }
-            };
+            return di.createMapChain(mappings, name);
         };
 
         kernel.getMapping = function (name) {
-            return mappings[name];
-        };
-
-        kernel.createMapping = function (name) {
-            var mapping = {};
-
-            mapping.name = name;
-
-            mapping.targets = [];
-
-            mapping.addTarget = function (target) {
-                var targetMapping = { target: target };
-                mapping.targets.push(targetMapping);
-                return targetMapping;
-            };
-
-            return mapping;
+            return mappings.get(name);
         };
 
         return kernel;
