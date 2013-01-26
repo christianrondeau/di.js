@@ -7,8 +7,8 @@
 
     // ********************************************** Cache
 
-    di.createCache = function () {
-        var cache = {}, entries = {};
+    di.createCache = function (init) {
+        var cache = {}, entries = init || {};
 
         cache.acquire = function (prop, params) {
             var key, value;
@@ -20,7 +20,7 @@
                     return value !== undefined;
                 },
                 hasValue: function () {
-                    return value;
+                    return value !== undefined && value != null;
                 },
                 getValue: function () {
                     return value;

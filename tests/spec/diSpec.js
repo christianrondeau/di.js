@@ -8,6 +8,62 @@
     });
 });
 
+describe("cache", function () {
+
+    describe("acquire.exists", function () {
+
+        it("creates a cache entry the first time it is called", function () {
+            expect(di.createCache().acquire("key").exists()).toEqual(false);
+        });
+
+        it("gets the same cache entry second time it is called", function () {
+            var cache = di.createCache({ key: "test" });
+
+            expect(cache.acquire("key").exists()).toEqual(true);
+        });
+
+    });
+
+    describe("acquire.hasValue", function () {
+
+        it("returns true when an object is found", function () {
+            expect(di.createCache({ key: {} }).acquire("key").hasValue()).toEqual(true);
+        });
+
+        it("returns false when the key is not found", function () {
+            expect(di.createCache().acquire("key").hasValue()).toEqual(false);
+        });
+
+        it("returns false when null is found", function () {
+            expect(di.createCache({ key: null }).acquire("key").hasValue()).toEqual(false);
+        });
+
+    });
+
+    describe("acquire.getValue", function () {
+
+        it("returns undefined when an object is not found", function () {
+            expect(di.createCache().acquire("key").getValue()).toBeUndefined();
+        });
+
+        it("returns the cached object when the key is found", function () {
+            expect(di.createCache({ key: "test" }).acquire("key").getValue()).toEqual("test");
+        });
+    });
+
+    describe("acquire.setValue", function () {
+
+        it("returns undefined when an object is not found", function () {
+            var values = {}, cache = di.createCache(values);
+            cache.acquire("key").setValue("value");
+
+            expect(values.key).toEqual("value");
+        });
+
+    });
+
+});
+
 describe("container", function () {
     var container;
 
