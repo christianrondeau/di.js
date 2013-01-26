@@ -181,18 +181,18 @@
         return map;
     };
 
-    // ********************************************** Kernel
+    // ********************************************** Container
 
-    di.createKernel = function () {
-        var kernel = {}, mappings = di.createMappingDict();
+    di.createContainer = function () {
+        var container = {}, mappings = di.createMappingDict();
 
-        kernel.inject = function (target) {
+        container.inject = function (target) {
             di.createInjector(mappings).injectIntoTarget(target);
 
             return target;
         };
 
-        kernel.create = function (name, params) {
+        container.create = function (name, params) {
             var mapping = mappings.getOrCreate(name);
 
             if (mapping) {
@@ -202,15 +202,15 @@
             }
         };
 
-        kernel.map = function (name) {
+        container.map = function (name) {
             return di.createMapChain(mappings, name);
         };
 
-        kernel.getMapping = function (name) {
+        container.getMapping = function (name) {
             return mappings.get(name);
         };
 
-        return kernel;
+        return container;
     };
 
     // ********************************************** Registering

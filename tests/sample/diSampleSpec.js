@@ -130,7 +130,7 @@
     };
 
     beforeEach(function () {
-        kernel = di.createKernel();
+        kernel = di.createContainer();
 
         logger = loggers.createMemoryLogger();
 

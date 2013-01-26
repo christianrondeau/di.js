@@ -12,33 +12,33 @@ A simple example
 -----
 
 ```javascript
-    var kernel = di.createKernel();
+    var container = di.createContainer();
 
-	kernel.map("weapon").to(sword).when(function(context) { return context.target.strength > 10 });
-	kernel.map("warrior").to(createNinja);
+	container.map("weapon").to(sword).when(function(context) { return context.target.strength > 10 });
+	container.map("warrior").to(createNinja);
 
-	var warrior = kernel.create("warrior", { name: "Zumoku" };
+	var warrior = container.create("warrior", { name: "Zumoku" };
 ```
 
 Usage
 -----
 
-First, create a kernel. This holds your mappings.
+First, create a container. This holds your mappings.
 
 ```javascript
-    var kernel = di.createKernel();
+    var container = di.createContainer();
 ```
 
 You can then define an instance to assign to property with a given name
 
 ```javascript
-    kernel.map("weapon").to(sword);
+    container.map("weapon").to(sword);
 ```
 
 You can also define a construction method instead of an instance
 
 ```javascript
-    kernel.map("weapon").to(function() {
+    container.map("weapon").to(function() {
 		return createSword();
 	});
 ```
@@ -46,8 +46,8 @@ You can also define a construction method instead of an instance
 You can provide conditional mappings using the `when` function; the `context` parameter contains a `placeholder` and the injection `target`
 
 ```javascript
-    kernel.map("weapon").to(sword).when(function(context) { return context.target.strength >= 10 });
-	kernel.map("weapon").to(stick).when(function(context) { return context.target.strength < 10 });
+    container.map("weapon").to(sword).when(function(context) { return context.target.strength >= 10 });
+	container.map("weapon").to(stick).when(function(context) { return context.target.strength < 10 });
 ```
 
 You can inject dependencies directly into an object
@@ -57,21 +57,21 @@ You can inject dependencies directly into an object
 		...
 	};
 
-    kernel.inject(warrior);
+    container.inject(warrior);
 ```
 
-Keep in mind that `kernel.inject` returns the instance, so you can create and inject your objects in a single line
+Keep in mind that `container.inject` returns the instance, so you can create and inject your objects in a single line
 
 ```javascript
-	var warrior = kernel.inject(createWarrior());
+	var warrior = container.inject(createWarrior());
 ```
 
-You can also create an instance and inject it by using `kernel.create` and the mapped name
+You can also create an instance and inject it by using `container.create` and the mapped name
 
 ```javascript
-	kernel.map("warrior").to(createNinja);
+	container.map("warrior").to(createNinja);
 
-	var warrior = kernel.create("warrior");
+	var warrior = container.create("warrior");
 ```
 
 Recursivity and reuse
@@ -105,7 +105,7 @@ Construction function parameters
 You can use placeholders to provide parameters to the injected construction function.
 
 ```javascript
-	kernel.map("weapon").to(function(enchantment) {
+	container.map("weapon").to(function(enchantment) {
 		return ...;
 	});
 
@@ -116,7 +116,7 @@ You can use placeholders to provide parameters to the injected construction func
 		};
 	};
 
-	kernel.inject(warrior);
+	container.inject(warrior);
 ```
 
 Download
