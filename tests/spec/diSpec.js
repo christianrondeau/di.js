@@ -53,11 +53,27 @@ describe("cache", function () {
 
     describe("acquire.setValue", function () {
 
-        it("returns undefined when an object is not found", function () {
+        it("sets the value under the specified key", function () {
             var values = {}, cache = di.createCache(values);
             cache.acquire("key").setValue("value");
 
             expect(values.key).toEqual("value");
+        });
+
+    });
+
+    describe("acquire.key", function () {
+
+        it("is exactly the provided key", function () {
+            expect(di.createCache().acquire("key").getGey()).toEqual("key");
+        });
+
+        it("is the provided key plus the param", function () {
+            expect(di.createCache().acquire("key", "param1").getGey()).toEqual("key::param1");
+        });
+
+        it("is the provided key plus the list of params", function () {
+            expect(di.createCache().acquire("key",  ["param1", "param2"]).getGey()).toEqual("key::param1,param2");
         });
 
     });

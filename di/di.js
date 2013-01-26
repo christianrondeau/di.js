@@ -16,6 +16,9 @@
             value = entries[key];
 
             return {
+                getGey: function () {
+                    return key;
+                },
                 exists: function () {
                     return value !== undefined;
                 },
