@@ -17,7 +17,7 @@ A simple example
 	container.map("weapon").to(sword).when(function(context) { return context.target.strength > 10 });
 	container.map("warrior").to(createNinja);
 
-	var warrior = container.create("warrior", { name: "Zumoku" };
+	var warrior = container.create("warrior");
 ```
 
 Usage
