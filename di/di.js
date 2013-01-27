@@ -135,12 +135,14 @@
 
     // ********************************************** Mapping
 
-    di.createMapping = function (name) {
+    di.createMapping = function (name, init) {
         var mapping = {};
 
         mapping.name = name;
 
         mapping.targets = [];
+
+        mapping.condition = undefined;
 
         mapping.addTarget = function (target) {
             var targetMapping = { target: target };

@@ -106,11 +106,43 @@ describe("dict", function () {
 // ********************************************** mapping
 
 describe("mapping", function () {
+    var mapping;
+
+    beforeEach(function () {
+        mapping = di.createMapping("prop");
+    });
 
     describe("createMapping", function () {
 
         it("creates a mapping", function () {
-            expect(di.createMapping()).toBeDefined();
+            expect(mapping).toBeDefined();
+        });
+
+        it("has an empty targets array", function () {
+            expect(mapping.targets).toEqual([]);
+        });
+
+        it("has the provided name in a property", function () {
+            expect(mapping.name).toEqual("prop");
+        });
+
+    });
+
+    describe("addTarget", function () {
+
+        it("adds the target to the list when it is empty", function () {
+            var target = {};
+            mapping.addTarget(target);
+
+            expect(mapping.targets[0].target).toEqual(target);
+        });
+
+        it("adds the target to the list when there is already a target", function () {
+            mapping.targets = [{ target: {}}];
+            var target = {};
+            mapping.addTarget(target);
+
+            expect(mapping.targets[1].target).toEqual(target);
         });
 
     });
