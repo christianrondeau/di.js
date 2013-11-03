@@ -23,7 +23,7 @@
                     return value !== undefined;
                 },
                 hasValue: function () {
-                    return value !== undefined && value != null;
+                    return value !== undefined && value !== null;
                 },
                 getValue: function () {
                     return value;
@@ -168,7 +168,7 @@
                     targetMapping.condition = condition;
                 }
             };
-        }
+        };
 
         return map;
     };
@@ -185,7 +185,7 @@
         };
 
         container.create = function (name, params) {
-            var mapping = mappings.acquire(name).getOrCreate(function () { return di.createMapping(name) });
+            var mapping = mappings.acquire(name).getOrCreate(function () { return di.createMapping(name); });
 
             if (mapping) {
                 return di.createInjector(mappings).getOrCreateDependency(this, mapping, params);

@@ -122,7 +122,8 @@ You can use placeholders to provide parameters to the injected construction func
 Download
 --------
 
-You can download the latest version of di.js here on github: [download](https://raw.github.com/christianrondeau/di.js/master/di/di.js)
+[dev](https://raw.github.com/christianrondeau/di.js/master/di/di.js)
+[minified](https://raw.github.com/christianrondeau/di.js/master/di/di.min.js)
 
 Licence
 -------
